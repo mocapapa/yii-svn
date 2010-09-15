@@ -1,0 +1,22 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE tbl_user (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(128) NOT NULL,
+    password VARCHAR(128) NOT NULL,
+    email VARCHAR(128) NOT NULL,
+    profile VARCHAR(128) NOT NULL
+);
+INSERT INTO "tbl_user" VALUES(null,'sakurai','9f9a585cb04cd8b8dfefb1d7044270c1','sakurai@pugpug.org','sakurai');
+INSERT INTO "tbl_user" VALUES(null,'admin','e48dcc831dac26e327802db02312d246','admin@fujitsu.com','admin');
+CREATE TABLE tbl_project (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(128) NOT NULL,
+    project VARCHAR(128) NOT NULL,
+    description VARCHAR(1024) NOT NULL
+);
+INSERT INTO "tbl_project" VALUES(null,'sakurai','yii-analogue-clock-widget','');
+INSERT INTO "tbl_project" VALUES(null,'admin','dummy','');
+INSERT INTO "tbl_project" VALUES(null,'sakurai','yiijan-yiijan','');
+DELETE FROM sqlite_sequence;
+COMMIT;
