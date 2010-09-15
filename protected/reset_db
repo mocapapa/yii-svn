@@ -1,0 +1,1 @@
+ sqlite3 data/$1 .dump | sed -e 's/INSERT INTO "[a-z_]+" VALUES([0-9]+,'[a-z-]+','[a-z-]+');/INSERT INTO "$1" VALUES(null, '$2', '$3')/;
