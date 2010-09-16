@@ -29,7 +29,6 @@
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
 				array('label'=>'Project', 'url'=>array('/project/index'), 'visible'=>!Yii::app()->user->isGuest),
-				array('label'=>'WebSVN', 'url'=>array('/websvn/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'SimpleLogin', 'url'=>array('/simpleLogin/Default/index'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Delete', 'url'=>array('/simpleLogin/Default/delete'), 'visible'=>!Yii::app()->user->isGuest),
 
