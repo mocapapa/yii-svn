@@ -16,24 +16,27 @@
 	$repos='http://svn.localhost/repos/'.Yii::app()->user->name.'...'.$data->project.'/trunk/';
 	echo $repos;
 	?>
+	<?php
+	$this->widget('zii.widgets.jui.CJuiButton',
+		array(
+			'name'=>'button'.Yii::app()->user->name.$data->project,
+			'buttonType'=>'link',
+			'caption'=>'view',
+			'url'=>'/websvn-2.3.1/listing.php?repname='.Yii::app()->user->name.'...'.$data->project,
+		));
+	?>
 	<br />
 
 	<b>&nbsp;&nbsp;Check-out:</b>
-	<?php
-	echo "svn co $repos &lt;local_directory&gt;";
-	?>
+	<?php echo "svn co $repos &lt;local_directory&gt;"; ?>
 	<br />
 
 	<b>&nbsp;&nbsp;Add:</b>
-	<?php
-	echo "svn add &lt;local_directory&gt;/*;";
-	?>
+	svn add &lt;local_directory&gt;/*;
 	<br />
 
 	<b>&nbsp;&nbsp;Check-in:</b>
-	<?php
-	echo "svn ci &lt;local_directory&gt;";
-	?>
+	svn ci &lt;local_directory&gt;
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
