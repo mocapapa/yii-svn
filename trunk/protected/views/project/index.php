@@ -8,7 +8,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>Projects</h1>
+<h1>Projects for <?php echo Yii::app()->user->name; ?></h1>
 <?php
 	$this->widget('zii.widgets.CListView', array(
 		'dataProvider'=>$dataProvider,
