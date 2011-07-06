@@ -12,7 +12,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Project #<?php echo $model->id; ?></h1>
+<h1>View Project "<?php echo $model->project; ?>"</h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

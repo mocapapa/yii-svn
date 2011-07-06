@@ -35,7 +35,7 @@
 				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
 		)); ?>
-		<?php $_GET['svnusername'] = Yii::app()->user->name; ?>
+
 	</div><!-- mainmenu -->
 
 	<?php $this->widget('zii.widgets.CBreadcrumbs', array(
