@@ -28,15 +28,11 @@ class ProjectController extends Controller
 	 * This method is used by the 'accessControl' filter.
 	 * @return array project control rules
 	 */
-	public function projectRules()
+	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','delete'),
+				'actions'=>array('index','view','create','update','delete'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -70,9 +66,10 @@ class ProjectController extends Controller
 		{
 			$model->attributes=$_POST['Project'];
 			$model->username=Yii::app()->user->name;
+
 			if($model->save()) {
 				$this->generate_acl();
-				$this->generate_rep();
+				$this->generate_rep($model->username, $model->project);
 				$this->redirect(array('index'));
 			}
 		}
@@ -97,8 +94,10 @@ class ProjectController extends Controller
 		if(isset($_POST['Project']))
 		{
 			$model->attributes=$_POST['Project'];
-			if($model->save())
+			if($model->save()) {
+				$this->generate_acl();
 				$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
 		$this->render('update',array(
@@ -183,9 +182,8 @@ class ProjectController extends Controller
 	{
 		$root='/var/www/html/yii/demos/yii-svn/';
 		$filename='accesspolicy';
+		$data=Project::model()->findAll();
 
-                $dataProvider=new CActiveDataProvider('Project');
-		$data=$dataProvider->getData();
 		if(count($data)>0)
 		{
 			$handle=fopen($root.$filename, "w");
@@ -205,24 +203,14 @@ class ProjectController extends Controller
 	//
 	// Generate actual repository
 	//
-	private function generate_rep()
+	private function generate_rep($user, $proj)
 	{
 		$root='/var/www/html/yii/demos/yii-svn/';
 		$repos='repos/';
-
-                $dataProvider=new CActiveDataProvider('Project');
-		$data=$dataProvider->getData();
-		if(count($data)>0)
-		{
-			foreach($data as $i=>$item)
-			{
-				$proj=$item->attributes['project'];
-				$user=$item->attributes['username']."...";
-				if (!is_dir("$root$repos$user$proj")) {
-					system("svnadmin create $root$repos$user$proj");
-					system("svn -m 'initial structure' mkdir file://localhost/$root$repos$user$proj/branches file://localhost/$root$repos$user$proj/tags file://localhost/$root$repos$user$proj/trunk");
-				}
-			}
+		$user = $user . '...';
+		if (!is_dir("$root$repos$user$proj")) {
+			system("/usr/bin/svnadmin --config-dir /var/tmp/apache/.subversion/ create $root$repos$user$proj");
+			system("/usr/bin/svn -m 'initial structure' mkdir file://localhost/$root$repos$user$proj/branches file://localhost/$root$repos$user$proj/tags file://localhost/$root$repos$user$proj/trunk");
 		}
 	}
 
@@ -235,4 +223,42 @@ class ProjectController extends Controller
 		$repos='repos/';
 		system("rm -r $root$repos$user...$proj");
 	}
+
+	private  function system_ex($cmd, $stdin = "")
+	{
+	  $descriptorspec = array(
+				  0 => array("pipe", "r"),
+				  1 => array("pipe", "w"),
+				  2 => array("pipe", "w")
+				  );
+	  
+	  $process = proc_open($cmd, $descriptorspec, $pipes);
+	  $result_message = "";
+	  $error_message = "";
+	  $return = null;
+	  if (is_resource($process))
+	    {
+	      fputs($pipes[0], $stdin);
+	      fclose($pipes[0]);
+	      
+	      while ($error = fgets($pipes[2])){
+		$error_message .= $error;
+	      }
+	      while ($result = fgets($pipes[1])){
+		$result_message .= $result;
+	      }
+	      foreach ($pipes as $k=>$_rs){
+		if (is_resource($_rs)){
+		  fclose($_rs);
+		}
+	      }
+	      $return = proc_close($process);
+	    }
+	  return array(
+		       'return' => $return,
+		       'stdout' => $result_message,
+		       'stderr' => $error_message,
+		       );
+	}
+
 }
