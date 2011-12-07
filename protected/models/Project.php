@@ -79,13 +79,9 @@ class Project extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
-
 		$criteria->compare('id',$this->id);
-
 		$criteria->compare('username',$this->username,true);
-
 		$criteria->compare('project',$this->project,true);
-
 		return new CActiveDataProvider('Project', array(
 			'criteria'=>$criteria,
 		));
