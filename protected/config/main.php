@@ -6,6 +6,7 @@
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
+	'theme'=>'green_forest',
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'SVN Project Management',
 
@@ -20,8 +21,24 @@ return array(
 
 	// application components
 	'components'=>array(
+		'widgetFactory' => array(
+			'widgets' => array(
+				'CJuiAutoComplete' => array(
+					'themeUrl' => '/css/jqueryui',
+					'theme' => 'green_forest',
+				),
+				'CJuiDialog' => array(
+					'themeUrl' => '/css/jqueryui',
+					'theme' => 'green_forest',
+				),
+				'CJuiDatePicker' => array(
+					'themeUrl' => '/css/jqueryui',
+					'theme' => 'green_forest',
+				),
+			),
+		),
 		'user'=>array(
-			'loginUrl'=>array('simpleLogin'),
+			'loginUrl'=>array('simpleLdapLogin'),
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
@@ -39,6 +56,7 @@ return array(
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
 			'tablePrefix'=>'tbl_',
+			
 		),
 		// uncomment the following to use a MySQL database
 		/*
@@ -52,8 +70,8 @@ return array(
 		*/
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-            'errorAction'=>'site/error',
-        ),
+			'errorAction'=>'site/error',
+		),
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -69,6 +87,9 @@ return array(
 				*/
 			),
 		),
+		'cache'=>array(
+			'class'=>'CApcCache',
+		),
 	),
 
 	// application-level parameters that can be accessed
@@ -76,9 +97,12 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
+		'getInfo'=>'電子電話帳',
 	),
 	'modules'=>array(
-		'simpleLogin',
+		'simpleLdapLogin'=>array(
+			'ldapServer'=>'ldap.er.fujitsu.com',
+		),
 	),
 	'defaultController' => 'project',
 );
