@@ -1,4 +1,5 @@
 <?php
+Yii::import('application.modules.simpleLdapLogin.models.MUser');
 
 class ProjectController extends Controller
 {
@@ -66,8 +67,15 @@ class ProjectController extends Controller
 		{
 			$model->attributes=$_POST['Project'];
 			$model->username=Yii::app()->user->name;
-
+			$user=MUser::model()->find(new CDbCriteria(array(
+				'condition'=>'username = :username',
+				'params'=>array(
+					':username'=>$model->username,
+				),
+									 )));
+						  
 			if($model->save()) {
+				$this->generate_validuser($user->username, $user->plainPassword);
 				$this->generate_acl();
 				$this->generate_rep($model->username, $model->project);
 				$this->redirect(array('index'));
@@ -134,11 +142,19 @@ class ProjectController extends Controller
 	/**
 	 * Lists all models.
 	 */
+
 	public function actionIndex()
 	{
+	  Yii::import('application.modules.simpleLdapLogin.models.MUser');
+	  $user=MUser::model()->find('username = \''.Yii::app()->user->name.'\'');
+	  //print_r($user);
+	  $project = $this;
+
+
         	$dataProvider=new CActiveDataProvider('Project', array(
 			'criteria'=>array(
-				'condition'=>'username = \''.Yii::app()->user->name.'\'',
+				'condition'=>'username=:username',
+				'params'=>array(':username'=>Yii::app()->user->name,)
 			),
 		));
 
@@ -173,6 +189,15 @@ class ProjectController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	//
+	// Generate validuser
+	//
+	private function generate_validuser($username, $password)
+	{
+		$file = Yii::app()->basePath.'/../validuser';
+		system("htpasswd -b $file $username $password");
 	}
 
 	//
