@@ -18,7 +18,7 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
 	<?php echo CHtml::encode($data->description); ?>
 	<br />
-	<img src="/demos/yii-svn/images/small.jpg" width="1" height="5">
+	<img src="/yii/demos/yii-svn/images/small.jpg" width="1" height="5">
 	<hr>
 
 	<div><span style="float: right;">
@@ -28,7 +28,7 @@
 			'name'=>'button'.Yii::app()->user->name.$data->project,
 			'buttonType'=>'link',
 			'caption'=>'view',
-			'url'=>'/websvn-2.3.2/listing.php?repname='.$prj.'&path=%2Ftrunk%2F&isdir=1',
+			'url'=>'/websvn-2.3.3/listing.php?repname='.$prj.'&path=%2Ftrunk%2F&isdir=1',
 		));
    
 	?>
